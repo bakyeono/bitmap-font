@@ -7,7 +7,7 @@
    (re-find #"(?i)solaris" os-name) "native/solaris"))
 
 (defproject bitmap-font "0.1.1"
-  :description "This library renders bitmap fonts in LWJGL."
+  :description "Bitmap fonts in LWJGL."
   :url ""
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
