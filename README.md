@@ -26,4 +26,4 @@ Distributed under the Eclipse Public License either version 1.0 or any later ver
 
 [wiki-hangul]: http://en.wikipedia.org/wiki/Hangul
 
-kimg-bitmap-font-demo]: doc/img/bitmap-font-demo.png
+[img-bitmap-font-demo]: doc/img/bitmap-font-demo.png
