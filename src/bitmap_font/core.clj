@@ -9,7 +9,7 @@
     :name bitmap-font.core
     :methods [#^{:static true} [start [] Void]]))
 
-(def ^:const application-title "Bitmap Font Demo with LWJGL")
+(def ^:const application-title "Bitmap Font Demo")
 (def ^:const application-author "Bak Yeon O")
 
 ;; init!
@@ -18,7 +18,7 @@
   []
   (conf/init-conf!)
   (gl/init-screen! application-title)
-  (gl/init-fonts!)
+  (font/load-font-imgs!) 
   (gl/init-gl!))
 
 ;; clean-up!
@@ -34,4 +34,12 @@
   (init!)
   (demo/run!)
   (clean-up!))
+
+
+(defn -test
+  []
+  (let [t (Thread. -start)]
+    (.start t)
+    t))
+
 

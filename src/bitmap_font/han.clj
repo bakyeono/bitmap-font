@@ -36,6 +36,18 @@
   #{\ㄱ \ㄲ \ㄳ \ㄴ \ㄵ \ㄶ \ㄷ \ㄹ \ㄺ \ㄻ \ㄼ \ㄽ \ㄾ \ㄿ \ㅀ
    \ㅁ \ㅂ \ㅄ \ㅅ \ㅆ \ㅇ \ㅈ \ㅊ \ㅋ \ㅌ \ㅍ \ㅎ})
 
+;; which-part
+;; 한글 자모 문자를 입력받아 초성, 중성, 종성 중 어느 것인지 확인한다.
+;; 반환값은 :head, :body, :tail, nil 중 하나다.
+;; 초성과 종성 모두에 해당하는 경우, 초성으로 간주한다.
+(defn which-part
+  [ch]
+  (cond
+    (is-head? ch) :head
+    (is-body? ch) :body
+    (is-tail? ch) :tail
+    :else nil))
+
 ;; head->head-order
 ;; 한글 초성 문자를 한글 전산 체계 상의 순서(번호)와 대응시킨다.
 (def ^:const head->head-order
@@ -185,8 +197,10 @@
   (for [k ks] [(order k) v]))
 (defn- make-suit-dic
   [v-kss order]
-  (into {} (apply concat (for [[v ks] v-kss]
-                           (make-suit-matchers v ks order)))))
+  (into {} (apply
+             concat
+             (for [[v ks] v-kss]
+               (make-suit-matchers (* v 0x20) ks order)))))
 
 ;; suit-of-head-on-body-without-tail
 ;; 중성번호에 따른 초성의 벌 (종성이 없을 때)
@@ -273,13 +287,17 @@
 
 ;; get-jamo-draw-info
 ;; UTF-16 한글 완성형 글자 하나를 입력받아,
-;; 자모의 순서와 자모의 벌을 반환한다.
-;; 반환형식: [초성번호 중성번호 종성번호 초성벌 중성벌 종성벌]
+;; 자모의 순서와 자모의 벌을 합친 값을 반환한다.
+;; (글꼴에서 해당 칸을 찾을 때 출력에 사용)
+;; 계산식: 8x4x4 조합형 글꼴에서
+;;         16종의 벌이 0x0~0xf 사이에 배치되어 있을 때,
+;;         번호: 벌 * 0x20 + 자모순서
+;; 반환형식: [초성번호 중성번호 종성번호]
 (defn get-jamo-draw-info
   [ch]
   (let [[h b t] (full-han->jamo-order ch)
-        [sh hb ht] (jamo-order->jamo-suits h b t)]
-    [h b t sh hb ht]))
+        [sh sb st] (jamo-order->jamo-suits h b t)]
+    [(+ h sh) (+ b sb) (+ t st)]))
 
 
 ;; --- qwerty 자판 -> 한글 2벌식 자판 변환 ---

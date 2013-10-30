@@ -14,7 +14,14 @@
    :screen-h 600
    :screen-bpp 24
    :fullscreen? false
-   :fps-limit 60})
+   :fps-limit 60
+   :font-ascii-plain "font/ascii-plain.png"
+   :font-ascii-light "font/ascii-light.png"
+   :font-hangul-plain "font/hangul-dkby-dinaru-2.png"
+   :font-hangul-light "font/hangul-light-gothic.png"
+   :font-kana-plain "font/kana-plain.png"
+   :font-kana-light "font/kana-plain.png"
+   :font-arrow "font/arrow.png"})
 
 ;; parse-property
 ;; 설정 파일 내의 개별 설정 항목을
@@ -26,9 +33,9 @@
   [(keyword k)
    (condp = (-> (keyword k) options class)
      Boolean (Boolean/parseBoolean v)
-     Long    (Long/parseLong v)
+     Long (Long/parseLong v)
      Integer (Integer/parseInt v)
-     String  v
+     String v
      (str "invalid option : " v))])
 
 ;; load-user-conf!

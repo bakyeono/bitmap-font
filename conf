@@ -1,0 +1,16 @@
+# 화면 설정
+screen-w = 800
+screen-h = 600
+screen-bpp = 24
+fullscreen? = false
+fps-limit = 60
+
+# 글꼴 설정 (PNG 이미지 - indexed color, fg: #ffffff, bg: opacity 0%)
+font-ascii-plain = font/ascii-plain.png
+font-ascii-light = font/ascii-light.png
+font-hangul-plain = font/hangul-dkby-dinaru-2.png
+font-hangul-light = font/hangul-light-gothic.png
+font-kana-plain = font/kana-plain.png
+font-kana-light = font/kana-plain.png
+font-arrow = font/arrow.png
+

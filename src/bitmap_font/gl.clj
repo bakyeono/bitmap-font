@@ -54,14 +54,6 @@
     img-format
     (ResourceLoader/getResourceAsStream img-path)))
 
-(defrecord FontImgDic [casual formal])
-(defn init-fonts!
-  []
-  (def font-img-dic
-    (FontImgDic.
-      (load-texture "PNG" "./img/light-gothic.png")
-      (load-texture "PNG" "./img/dkby-dinaru-2.png"))))
-
 ;; get-time
 ;; 시스템의 현재 시각을 반환한다.
 (defn get-time
