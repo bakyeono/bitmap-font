@@ -15,7 +15,6 @@ You can run the demo by typing this on command line:
 ~~~
 lein run
 ~~~
-{lang="sh"}
 
 ## License
 
