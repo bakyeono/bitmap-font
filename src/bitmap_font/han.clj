@@ -48,77 +48,77 @@
     (is-tail? ch) :tail
     :else nil))
 
-;; head->head-order
+;; head->head-idx
 ;; 한글 초성 문자를 한글 전산 체계 상의 순서(번호)와 대응시킨다.
-(def ^:const head->head-order
+(def ^:const head->head-idx
   {\ㄱ 0 \ㄲ 1 \ㄴ 2 \ㄷ 3 \ㄸ 4 \ㄹ 5 \ㅁ 6 \ㅂ 7 \ㅃ 8 \ㅅ 9
    \ㅆ 10 \ㅇ 11 \ㅈ 12 \ㅉ 13 \ㅊ 14 \ㅋ 15 \ㅌ 16 \ㅍ 17 \ㅎ 18})
 
-;; body->body-order
+;; body->body-idx
 ;; 한글 중성 문자를 한글 전산 체계 상의 순서(번호)와 대응시킨다.
-(def ^:const body->body-order
+(def ^:const body->body-idx
   {\ㅏ 0 \ㅐ 1 \ㅑ 2 \ㅒ 3 \ㅓ 4 \ㅔ 5 \ㅕ 6 \ㅖ 7 \ㅗ 8 \ㅘ 9
    \ㅙ 10 \ㅚ 11 \ㅛ 12 \ㅜ 13 \ㅝ 14 \ㅞ 15 \ㅟ 16 \ㅠ 17 \ㅡ 18 \ㅢ 19
    \ㅣ 20})
 
-;; body->body-order
+;; body->body-idx
 ;; 한글 종성 문자를 한글 전산 체계 상의 순서(번호)와 대응시킨다.
-(def ^:const tail->tail-order
+(def ^:const tail->tail-idx
   {nil 0 \ㄱ 1 \ㄲ 2 \ㄳ 3 \ㄴ 4 \ㄵ 5 \ㄶ 6 \ㄷ 7 \ㄹ 8 \ㄺ 9
    \ㄻ 10 \ㄼ 11 \ㄽ 12 \ㄾ 13 \ㄿ 14 \ㅀ 15 \ㅁ 16 \ㅂ 17 \ㅄ 18 \ㅅ 19
    \ㅆ 20 \ㅇ 21 \ㅈ 22 \ㅊ 23 \ㅋ 24 \ㅌ 25 \ㅍ 26 \ㅎ 27})
 
-;; head-order->head
+;; head-idx->head
 ;; 번호를 한글 초성 순서(번호)에 따른 문자와 대응시킨다.
-(def ^:const head-order->head
+(def ^:const head-idx->head
   (apply hash-map
-         (interleave (vals head->head-order)
-                     (keys head->head-order))))
+         (interleave (vals head->head-idx)
+                     (keys head->head-idx))))
 
-;; body-order->body
+;; body-idx->body
 ;; 번호를 한글 중성 순서(번호)에 따른 문자와 대응시킨다.
-(def ^:const body-order->body
+(def ^:const body-idx->body
   (apply hash-map
-         (interleave (vals body->body-order)
-                     (keys body->body-order))))
+         (interleave (vals body->body-idx)
+                     (keys body->body-idx))))
 
-;; tail-order->tail
+;; tail-idx->tail
 ;; 번호를 한글 중성 순서(번호)에 따른 문자와 대응시킨다.
-(def ^:const tail-order->tail
+(def ^:const tail-idx->tail
   (apply hash-map
-         (interleave (vals tail->tail-order)
-                     (keys tail->tail-order))))
+         (interleave (vals tail->tail-idx)
+                     (keys tail->tail-idx))))
 
-;; full-han-code->head-order
+;; full-han-code->head-idx
 ;; 형식: utf-16-code -> long
 ;; 완성형 한글 코드를 입력받아 초성의 번호를 반환한다.
-(defn full-han-code->head-order
+(defn full-han-code->head-idx
   [code tail]
   (quot (quot (- code han-begin tail)
               number-of-tails)
         number-of-bodies))
 
-;; full-han-code->body-order
+;; full-han-code->body-idx
 ;; 형식: utf-16-code -> long
 ;; 완성형 한글 코드를 입력받아 중성의 번호를 반환한다.
-(defn full-han-code->body-order
+(defn full-han-code->body-idx
   [code tail]
   (rem (quot (- code han-begin tail)
              number-of-tails)
        number-of-bodies))
 
-;; full-han-code->tail-order
+;; full-han-code->tail-idx
 ;; 형식: utf-16-code -> long
 ;; 완성형 한글 코드를 입력받아 종성의 번호를 반환한다.
-(defn full-han-code->tail-order
+(defn full-han-code->tail-idx
   [code]
   (rem (unchecked-subtract code han-begin)
        number-of-tails))
 
-;; jamo-order->full-han-code
+;; jamo-idxs->full-han-code
 ;; 초성번호(head), 중성번호(body), 종성번호(tail)를 입력받아,
 ;; 대응하는 UTF-16 완성형 한글 코드값을 반환한다.
-(defn jamo-order->full-han-code
+(defn jamo-idxs->full-han-code
   [head body tail]
   (+ han-begin
      tail
@@ -130,9 +130,9 @@
 ;; UTF-16 완성형 한글 코드값을 반환한다.
 (defn jamo->full-han-code
   [head-ch body-ch tail-ch]
-  (jamo-order->full-han-code (head->head-order head-ch)
-                             (body->body-order body-ch)
-                             (tail->tail-order tail-ch)))
+  (jamo-idxs->full-han-code (head->head-idx head-ch)
+                            (body->body-idx body-ch)
+                            (tail->tail-idx tail-ch)))
 
 ;; jamo->full-han
 ;; 초성(head-ch), 중성(body-ch), 종성(tail-ch)을 조합해
@@ -155,52 +155,52 @@
   [ch]
   (is-full-han-code? (.hashCode ch)))
 
-;; full-han-code->jamo-order
+;; full-han-code->jamo-idxs
 ;; UTF-16 완성형 한글 코드값(code)을
 ;; 초성, 중성, 종성의 각 자모로 분리해 그 번호를 반환한다.
 ;; code가 올바른 범위인지는 검사하지 않으므로
 ;; is-full-han?을 이용해 미리 검사해야 한다.
 ;; 반환값: [초성번호 중성번호 종성번호]
-(defn full-han-code->jamo-order
+(defn full-han-code->jamo-idxs
   [code]
-  (let [tail (full-han-code->tail-order code)
-        body (full-han-code->body-order code tail)
-        head (full-han-code->head-order code tail)]
+  (let [tail (full-han-code->tail-idx code)
+        body (full-han-code->body-idx code tail)
+        head (full-han-code->head-idx code tail)]
     [head body tail]))
 
-;; full-han->jamo-order
+;; full-han->jamo-idxs
 ;; UTF-16 완성형 한글 문자를
 ;; 초성, 중성, 종성의 각 자모를 분리해 그 번호를 반환한다.
-(defn full-han->jamo-order
+(defn full-han->jamo-idxs
   [ch]
-  (full-han-code->jamo-order (.hashCode ch)))
+  (full-han-code->jamo-idxs (.hashCode ch)))
 
 ;; full-han->jamo
 ;; UTF-16 완성형 한글 문자를
 ;; 초성, 중성, 종성의 각 자모를 분리해 문자로 반환한다.
 (defn full-han->jamo
   [ch]
-  (let [[head body tail] (full-han->jamo-order ch)]
-    [(head-order->head head)
-     (body-order->body body)
-     (tail-order->tail tail)]))
+  (let [[head body tail] (full-han->jamo-idxs ch)]
+    [(head-idx->head head)
+     (body-idx->body body)
+     (tail-idx->tail tail)]))
 
 
 ;; --- 초중종성 '벌' 분류 ---
-;; 조합형 한글 폰트 출력을 위해, 초중종성의 '벌'을 분류함.
+;; 한글 폰트 출력을 위해, 초중종성의 '벌'을 분류함.
 
 ;; make-suit-matchers
 ;; make-suit-dic
 ;; '벌' 테이블 생성을 위한 편의 함수
 (defn- make-suit-matchers
-  [v ks order]
-  (for [k ks] [(order k) v]))
+  [v ks jamo->idx]
+  (for [k ks] [(jamo->idx k) v]))
 (defn- make-suit-dic
-  [v-kss order]
+  [v-kss jamo->idx]
   (into {} (apply
              concat
              (for [[v ks] v-kss]
-               (make-suit-matchers (* v 0x20) ks order)))))
+               (make-suit-matchers (* v 0x20) ks jamo->idx)))))
 
 ;; suit-of-head-on-body-without-tail
 ;; 중성번호에 따른 초성의 벌 (종성이 없을 때)
@@ -211,7 +211,7 @@
      [0x2 [\ㅜ \ㅠ]]
      [0x3 [\ㅘ \ㅙ \ㅚ \ㅢ]]
      [0x4 [\ㅝ \ㅞ \ㅟ]]]
-    body->body-order))
+    body->body-idx))
 
 ;; suit-of-head-on-body-with-tail
 ;; 중성번호에 따른 초성의 벌 (종성이 있을 때)
@@ -220,7 +220,7 @@
     [[0x5 [\ㅏ \ㅐ \ㅑ \ㅒ \ㅓ \ㅔ \ㅕ \ㅖ \ㅣ]]
      [0x6 [\ㅗ \ㅛ \ㅜ \ㅠ \ㅡ]]
      [0x7 [\ㅘ \ㅙ \ㅚ \ㅝ \ㅞ \ㅟ \ㅢ]]]
-    body->body-order))
+    body->body-idx))
 
 ;; suit-of-body-on-head-without-tail
 ;; 초성번호에 따른 중성의 벌 (종성이 없을 때)
@@ -229,7 +229,7 @@
     [[0x8 [\ㄱ \ㅋ]]
      [0x9 [\ㄲ \ㄴ \ㄷ \ㄸ \ㄹ \ㅁ \ㅂ \ㅃ
            \ㅅ \ㅆ \ㅇ \ㅈ \ㅉ \ㅊ \ㅌ \ㅍ \ㅎ]]]
-    head->head-order))
+    head->head-idx))
 
 ;; suit-of-body-on-head-with-tail
 ;; 초성번호에 따른 중성의 벌 (종성이 있을 때)
@@ -238,7 +238,7 @@
     [[0xa [\ㄱ \ㅋ]]
      [0xb [\ㄲ \ㄴ \ㄷ \ㄸ \ㄹ \ㅁ \ㅂ \ㅃ \ㅅ \ㅆ
            \ㅇ \ㅈ \ㅉ \ㅊ \ㅌ \ㅍ \ㅎ]]]
-    head->head-order))
+    head->head-idx))
 
 ;; suit-of-tail-on-body
 ;; 중성번호에 따른 종성의 벌
@@ -248,7 +248,7 @@
      [0xd [\ㅓ \ㅕ \ㅚ \ㅝ \ㅟ \ㅢ \ㅣ]]
      [0xe [\ㅐ \ㅒ \ㅔ \ㅖ \ㅙ \ㅞ]]
      [0xf [\ㅗ \ㅛ \ㅜ \ㅠ \ㅡ]]]
-    body->body-order))
+    body->body-idx))
 
 ;; get-suit-of-head
 ;; 중성번호와 종성번호를 입력받아,
@@ -275,11 +275,11 @@
   [body]
   (suit-of-tail-on-body body))
 
-;; jamo-order->jamo-suits
+;; jamo-idxs->jamo-suits
 ;; 초성번호(head), 중성번호(body), 종성번호(tail)를 입력받아,
 ;; 초성, 중성, 종성의 벌과 함께 반환한다.
 ;; [초성번호 초성벌 중성번호 중성벌 종성번호 종성벌] 형태로 반환한다.
-(defn jamo-order->jamo-suits
+(defn jamo-idxs->jamo-suits
   [head body tail]
   [(get-suit-of-head body tail)
    (get-suit-of-body head tail)
@@ -289,14 +289,14 @@
 ;; UTF-16 한글 완성형 글자 하나를 입력받아,
 ;; 자모의 순서와 자모의 벌을 합친 값을 반환한다.
 ;; (글꼴에서 해당 칸을 찾을 때 출력에 사용)
-;; 계산식: 8x4x4 조합형 글꼴에서
+;; 계산식: 8x4x4 글꼴에서
 ;;         16종의 벌이 0x0~0xf 사이에 배치되어 있을 때,
 ;;         번호: 벌 * 0x20 + 자모순서
 ;; 반환형식: [초성번호 중성번호 종성번호]
 (defn get-jamo-draw-info
   [ch]
-  (let [[h b t] (full-han->jamo-order ch)
-        [sh sb st] (jamo-order->jamo-suits h b t)]
+  (let [[h b t] (full-han->jamo-idxs ch)
+        [sh sb st] (jamo-idxs->jamo-suits h b t)]
     [(+ h sh) (+ b sb) (+ t st)]))
 
 
@@ -438,12 +438,12 @@
     (let [code (.hashCode ch)]
       (if (and (<= han-begin code)
                (<= code han-end))
-        (let [t (full-han-code->tail-order code)
-              b (full-han-code->body-order code t)
-              h (full-han-code->head-order code t)
-              ch-h (head-order->head h)
+        (let [t (full-han-code->tail-idx code)
+              b (full-han-code->body-idx code t)
+              h (full-han-code->head-idx code t)
+              ch-h (head-idx->head h)
               ch-b (char (+ 0x314f b))
-              ch-t (tail-order->tail t)]
+              ch-t (tail-idx->tail t)]
           (str (han2-type->qwerty-type ch-h)
                (han2-type->qwerty-type ch-b)
                (han2-type->qwerty-type ch-t)))

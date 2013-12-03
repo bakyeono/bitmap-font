@@ -94,7 +94,7 @@
              :arrow 0x2190})
 
 ;; calc->font-cell
-;; 문자 번호(order), 글꼴(font), 문자 구간(sect)을 입력받아,
+;; 문자 번호(idx), 글꼴(font), 문자 구간(sect)을 입력받아,
 ;; 문자를 blit하기 위한 글꼴에서의 칸을 벡터 형태로 반환한다.
 ;; 반환값은 blit-font-img! 에서 사용한다.
 (defn calc-font-cell
@@ -108,10 +108,10 @@
      (/ (inc u) cols)
      (/ (inc v) rows)]))
 
-;; calc-order-in-sect
+;; calc-idx-in-sect
 ;; 문자(ch)와 문자 구간(sect)을 입력받아,
 ;; 해당 문자가 문자 구간에서 몇 번째 문자인지를 반환한다.
-(defn calc-order-in-sect
+(defn calc-idx-in-sect
   [ch sect]
   (unchecked-subtract (.hashCode ch) (sect-base sect)))
 
@@ -138,18 +138,18 @@
   (blit-cell!
     x y
     font color
-    (calc-font-cell font (calc-order-in-sect ch sect)))
+    (calc-font-cell font (calc-idx-in-sect ch sect)))
   nil)
 
 ;; draw-hangul!
 ;; 한글 문자 하나를 그린다.
 (defn draw-hangul!
   [x y font color ch]
-  (doseq [order (han/get-jamo-draw-info ch)]
+  (doseq [idx (han/get-jamo-draw-info ch)]
     (blit-cell!
       x y
       font color
-      (calc-font-cell font order)))
+      (calc-font-cell font idx)))
   nil)
 
 ;; draw-hangul-jamo!
@@ -157,16 +157,16 @@
 (defn draw-hangul-jamo!
   [x y font color ch]
   (let [part (han/which-part ch)
-        order (+ (or (han/head->head-order ch)
-                     (han/body->body-order ch)
-                     (han/tail->tail-order ch))
-                 (cond (= part :head) (* 0x0 0x20)
-                       (= part :body) (* 0x8 0x20)
-                       (= part :tail) (* 0xc 0x20)))]
+        idx (+ (or (han/head->head-idx ch)
+                   (han/body->body-idx ch)
+                   (han/tail->tail-idx ch))
+               (cond (= part :head) (* 0x0 0x20)
+                     (= part :body) (* 0x8 0x20)
+                     (= part :tail) (* 0xc 0x20)))]
     (blit-cell!
       x y
       font color
-      (calc-font-cell font order))
+      (calc-font-cell font idx))
     nil))
 
 ;; draw-ch!

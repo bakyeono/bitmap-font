@@ -7,6 +7,7 @@
             [bitmap-font.gl :as gl]) 
   (:gen-class
     :name bitmap-font.core
+    :main true
     :methods [#^{:static true} [start [] Void]]))
 
 (def ^:const application-title "Bitmap Font Demo")
@@ -42,4 +43,7 @@
     (.start t)
     t))
 
+(defn -main
+  []
+  (-start))
 
