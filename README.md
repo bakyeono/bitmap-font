@@ -4,7 +4,7 @@
 
 This Clojure/LWJGL demo renders bitmap fonts in good old 1990s MS-DOS style.
 
-Of course, there's nothing special in rendering bitmap fonts itself. But this demo supports [Hangul][wiki-hangul] bitmap fonts, whose printing system is somewhat difficult. It isn't such a no-brainer as bliting Latin Alphabet bitmap fonts, for, in Hangul, 2 ~ 3 parts('jamo's) combine into a full character.
+Of course, there's nothing special in rendering bitmap fonts itself. But this demo supports [Hangul][wiki-hangul] bitmap fonts, whose printing system is somewhat difficult. It isn't such a no-brainer as bliting Latin Alphabet bitmap fonts, for, in Hangul, 2-3 parts('jamo's) combine into a full character.
 
 I'm also planning to support other languages if I can get other bitmap fonts whose characters have height of 16 pixel.
 
