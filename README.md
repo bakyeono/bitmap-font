@@ -1,9 +1,10 @@
 bitmap-font
 ====
 
-한국어로 된 자세한 설명: <http://bakyeono.net/post/2013-12-03-clojure-hangul-bitmap-font.html>
-
 ![Multi-lang bitmap font in Clojure/LWJGL][img-bitmap-font-demo]
+
+**한국어**로 된 자세한 설명: <http://bakyeono.net/post/2013-12-03-clojure-hangul-bitmap-font.html>
+
 
 This Clojure/LWJGL demo renders bitmap fonts in good old 1990s MS-DOS style.
 
