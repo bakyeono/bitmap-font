@@ -1,4 +1,7 @@
-# bitmap-font
+bitmap-font
+====
+
+한국어로 된 자세한 설명: <http://bakyeono.net/post/2013-12-03-clojure-hangul-bitmap-font.html>
 
 ![Multi-lang bitmap font in Clojure/LWJGL][img-bitmap-font-demo]
 
