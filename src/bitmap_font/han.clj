@@ -4,11 +4,11 @@
 
 ;; --- 한글 자모 분리 및 합성 ---
 
-;; * UTF-16 한글 조합 공식
+;; * 유니코드 한글 조합 공식
 ;;   완성형 한글 코드 =
 ;;   (((초성번호 * 중성개수) + 중성번호) * 종성개수) + 종성번호 + 0xac00
 
-;; UTF-16 완성형 한글 범위
+;; 유니코드 완성형 한글 범위
 (def ^:const han-begin 0xac00)
 (def ^:const han-end 0xd7a3)
 
@@ -90,7 +90,7 @@
                      (keys tail->tail-idx))))
 
 ;; full-han-code->head-idx
-;; 형식: utf-16-code -> long
+;; 형식: 유니코드 -> long
 ;; 완성형 한글 코드를 입력받아 초성의 번호를 반환한다.
 (defn full-han-code->head-idx
   [code tail]
@@ -99,7 +99,7 @@
         number-of-bodies))
 
 ;; full-han-code->body-idx
-;; 형식: utf-16-code -> long
+;; 형식: 유니코드 -> long
 ;; 완성형 한글 코드를 입력받아 중성의 번호를 반환한다.
 (defn full-han-code->body-idx
   [code tail]
@@ -108,7 +108,7 @@
        number-of-bodies))
 
 ;; full-han-code->tail-idx
-;; 형식: utf-16-code -> long
+;; 형식: 유니코드 -> long
 ;; 완성형 한글 코드를 입력받아 종성의 번호를 반환한다.
 (defn full-han-code->tail-idx
   [code]
@@ -117,7 +117,7 @@
 
 ;; jamo-idxs->full-han-code
 ;; 초성번호(head), 중성번호(body), 종성번호(tail)를 입력받아,
-;; 대응하는 UTF-16 완성형 한글 코드값을 반환한다.
+;; 대응하는 유니코드 완성형 한글 코드값을 반환한다.
 (defn jamo-idxs->full-han-code
   [head body tail]
   (+ han-begin
@@ -127,7 +127,7 @@
 
 ;; jamo->full-han-code
 ;; 초성(head-ch), 중성(body-ch), 종성(tail-ch)을 조합해
-;; UTF-16 완성형 한글 코드값을 반환한다.
+;; 유니코드 완성형 한글 코드값을 반환한다.
 (defn jamo->full-han-code
   [head-ch body-ch tail-ch]
   (jamo-idxs->full-han-code (head->head-idx head-ch)
@@ -136,27 +136,27 @@
 
 ;; jamo->full-han
 ;; 초성(head-ch), 중성(body-ch), 종성(tail-ch)을 조합해
-;; UTF-16 완성형 한글 문자를 반환한다.
+;; 유니코드 완성형 한글 문자를 반환한다.
 (defn jamo->full-han
   [head-ch body-ch tail-ch]
   (char (jamo->full-han-code head-ch body-ch tail-ch)))
 
 ;; is-full-han-code?
-;; code가 UTF-16 완성형 한글코드인가?
+;; code가 유니코드 완성형 한글코드인가?
 (defn is-full-han-code?
   [code]
   (and (<= han-begin code)
        (<= code han-end)))
 
 ;; is-full-han?
-;; ch가 UTF-16 완성형 한글코드인가?
+;; ch가 유니코드 완성형 한글코드인가?
 (defn is-full-han?
-  "글자가 UTF-16 완성형 한글코드인지 검사한다."
+  "글자가 유니코드 완성형 한글코드인지 검사한다."
   [ch]
   (is-full-han-code? (.hashCode ch)))
 
 ;; full-han-code->jamo-idxs
-;; UTF-16 완성형 한글 코드값(code)을
+;; 유니코드 완성형 한글 코드값(code)을
 ;; 초성, 중성, 종성의 각 자모로 분리해 그 번호를 반환한다.
 ;; code가 올바른 범위인지는 검사하지 않으므로
 ;; is-full-han?을 이용해 미리 검사해야 한다.
@@ -169,14 +169,14 @@
     [head body tail]))
 
 ;; full-han->jamo-idxs
-;; UTF-16 완성형 한글 문자를
+;; 유니코드 완성형 한글 문자를
 ;; 초성, 중성, 종성의 각 자모를 분리해 그 번호를 반환한다.
 (defn full-han->jamo-idxs
   [ch]
   (full-han-code->jamo-idxs (.hashCode ch)))
 
 ;; full-han->jamo
-;; UTF-16 완성형 한글 문자를
+;; 유니코드 완성형 한글 문자를
 ;; 초성, 중성, 종성의 각 자모를 분리해 문자로 반환한다.
 (defn full-han->jamo
   [ch]
@@ -286,7 +286,7 @@
    (get-suit-of-tail body)])
 
 ;; get-jamo-draw-info
-;; UTF-16 한글 완성형 글자 하나를 입력받아,
+;; 유니코드 한글 완성형 글자 하나를 입력받아,
 ;; 자모의 순서와 자모의 벌을 합친 값을 반환한다.
 ;; (글꼴에서 해당 칸을 찾을 때 출력에 사용)
 ;; 계산식: 8x4x4 글꼴에서
